@@ -1,6 +1,6 @@
 {
   "name": "smoke-break",
-  "version": "0.1.0",
+  "version": "0.1.0+codex.local-20260825-174948",
   "description": "Adds lightweight reflection prompts to long-running Codex turns.",
   "author": {
     "name": "Daniel S",
@@ -31,6 +31,9 @@
       "Explain how Smoke Break monitors long Codex turns.",
       "Show me how to configure the reflection interval."
     ],
-    "brandColor": "#6B7280"
+    "brandColor": "#C7773A",
+    "composerIcon": "./assets/cigarette.svg",
+    "logo": "./assets/cigarette.svg",
+    "logoDark": "./assets/cigarette.svg"
   }
 }

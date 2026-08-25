@@ -10,6 +10,6 @@
   },
   "scripts": {
     "test": "node --test",
-    "check": "node --check src/server.mjs && node --check src/turn-tracker.mjs && node --test"
+    "check": "node --check src/server.mjs && node --check src/config.mjs && node --check src/turn-tracker.mjs && node --test"
   }
 }

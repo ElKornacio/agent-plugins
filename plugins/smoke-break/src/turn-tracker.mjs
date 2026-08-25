@@ -20,7 +20,7 @@ export class TurnTracker {
     this.turns = new Map();
   }
 
-  handle({ event, sessionId, turnId } = {}) {
+  handle({ event, sessionId, turnId, intervalMs } = {}) {
     if (event !== "turn_start" && event !== "tool_end") {
       throw new TypeError("event must be turn_start or tool_end");
     }
@@ -30,13 +30,20 @@ export class TurnTracker {
     if (typeof turnId !== "string" || turnId.length === 0) {
       throw new TypeError("turnId must be a non-empty string");
     }
+    if (
+      event === "turn_start" &&
+      intervalMs !== undefined &&
+      (!Number.isSafeInteger(intervalMs) || intervalMs <= 0)
+    ) {
+      throw new TypeError("intervalMs must be a positive integer");
+    }
 
     return event === "turn_start"
-      ? this.#startTurn(sessionId, turnId)
+      ? this.#startTurn(sessionId, turnId, intervalMs ?? this.intervalMs)
       : this.#finishTool(sessionId, turnId);
   }
 
-  #startTurn(sessionId, turnId) {
+  #startTurn(sessionId, turnId, intervalMs) {
     const existing = this.turns.get(sessionId);
     if (existing?.turnId === turnId) {
       return {};
@@ -52,6 +59,7 @@ export class TurnTracker {
       turnId,
       startedAt: this.now(),
       notifiedBucket: 0,
+      intervalMs,
     });
 
     return {};
@@ -64,7 +72,7 @@ export class TurnTracker {
     }
 
     const elapsedMs = Math.max(0, this.now() - state.startedAt);
-    const bucket = Math.floor(elapsedMs / this.intervalMs);
+    const bucket = Math.floor(elapsedMs / state.intervalMs);
     if (bucket === 0 || bucket <= state.notifiedBucket) {
       return {};
     }
@@ -72,16 +80,19 @@ export class TurnTracker {
     state.notifiedBucket = bucket;
     const elapsedMinutes = Math.max(
       1,
-      Math.round((bucket * this.intervalMs) / 60_000),
+      Math.round((bucket * state.intervalMs) / 60_000),
     );
+    const minuteLabel = elapsedMinutes === 1 ? "minute" : "minutes";
 
     return {
       hookSpecificOutput: {
         hookEventName: "PostToolUse",
         additionalContext:
-          `Smoke break: this turn has been running for about ${elapsedMinutes} minutes. ` +
-          "Step back briefly: verify the goal, assess concrete progress, notice repeated actions or blockers, " +
-          "and decide whether to change approach or ask the user.",
+          `Smoke break: this turn has been running for about ${elapsedMinutes} ${minuteLabel}. ` +
+          "This is only a gentle checkpoint. Consider whether the work is progressing reasonably and " +
+          "roughly according to plan. If so, or if any deviation seems modest, simply continue. " +
+          "Only if it appears substantially off course or the time spent feels disproportionate, " +
+          "consider whether changing approach or asking the user would help.",
       },
     };
   }

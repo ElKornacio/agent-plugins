@@ -2,6 +2,8 @@
 
 Smoke Break is a tiny Codex plugin that nudges the agent to step back and reassess a long-running turn. It records the start of each turn and, after a completed tool call, adds a short model-visible reflection prompt once per elapsed interval.
 
+Its plugin icon is the smoking cigarette emoji: 🚬
+
 The default interval is five minutes.
 
 ## Why it is fast
@@ -26,7 +28,15 @@ See the [Codex hooks documentation](https://learn.chatgpt.com/docs/hooks) for li
 
 ## Configuration
 
-Change `SMOKE_BREAK_INTERVAL_MS` in [`.mcp.json`](.mcp.json). For example, one minute is `60000`.
+Create `~/.smoke-break.env` in your home directory:
+
+```dotenv
+SMOKE_BREAK_INTERVAL_MS=300000
+```
+
+Smoke Break reads this file once on every `UserPromptSubmit`, so edits apply to the next turn without restarting the MCP server. The file value overrides `SMOKE_BREAK_INTERVAL_MS` from [`.mcp.json`](.mcp.json). If the file is absent, the MCP environment value is used; the built-in fallback is five minutes.
+
+Set `SMOKE_BREAK_CONFIG_FILE` in the MCP process environment if you want to use a different file. `~` paths are supported on macOS, Linux, and Windows.
 
 ## Development
 

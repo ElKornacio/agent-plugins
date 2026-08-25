@@ -1,5 +1,6 @@
 import { createInterface } from "node:readline";
-import { DEFAULT_INTERVAL_MS, TurnTracker } from "./turn-tracker.mjs";
+import { readTurnConfig } from "./config.mjs";
+import { TurnTracker } from "./turn-tracker.mjs";
 
 const SERVER_INFO = Object.freeze({ name: "smoke-break", version: "0.1.0" });
 const TOOL = Object.freeze({
@@ -33,7 +34,7 @@ const TOOL = Object.freeze({
   },
 });
 
-const tracker = new TurnTracker({ intervalMs: readPositiveIntegerEnv() });
+const tracker = new TurnTracker();
 const input = createInterface({ input: process.stdin, crlfDelay: Infinity });
 
 input.on("line", (line) => {
@@ -109,25 +110,18 @@ function callTool(params) {
     throw new TypeError("Expected tools/call for on_event with an arguments object");
   }
 
-  const output = tracker.handle(params.arguments);
+  const event = { ...params.arguments };
+  if (event.event === "turn_start") {
+    const config = readTurnConfig();
+    event.intervalMs = config.intervalMs;
+    for (const warning of config.warnings) console.error(`Smoke Break: ${warning}`);
+  }
+
+  const output = tracker.handle(event);
   return {
     content: [{ type: "text", text: JSON.stringify(output) }],
     structuredContent: output,
   };
-}
-
-function readPositiveIntegerEnv() {
-  const raw = process.env.SMOKE_BREAK_INTERVAL_MS;
-  if (raw === undefined) return DEFAULT_INTERVAL_MS;
-
-  const value = Number(raw);
-  if (!Number.isSafeInteger(value) || value <= 0) {
-    console.error(
-      `Ignoring invalid SMOKE_BREAK_INTERVAL_MS=${JSON.stringify(raw)}; using ${DEFAULT_INTERVAL_MS}`,
-    );
-    return DEFAULT_INTERVAL_MS;
-  }
-  return value;
 }
 
 function sendError(id, code, message) {
