@@ -1,6 +1,6 @@
 {
   "name": "smoke-break",
-  "version": "0.1.0+codex.local-20260825-174948",
+  "version": "0.1.0+codex.local-20260825-180546",
   "description": "Adds lightweight reflection prompts to long-running Codex turns.",
   "author": {
     "name": "Daniel S",

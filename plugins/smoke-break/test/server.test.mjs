@@ -1,12 +1,19 @@
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
+import { randomUUID } from "node:crypto";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { createInterface } from "node:readline";
 import test from "node:test";
 
 test("serves lifecycle events over MCP stdio", async (t) => {
   const child = spawn(process.execPath, ["src/server.mjs"], {
     cwd: new URL("..", import.meta.url),
-    env: { ...process.env, SMOKE_BREAK_INTERVAL_MS: "100" },
+    env: {
+      ...process.env,
+      SMOKE_BREAK_INTERVAL_MS: "100",
+      SMOKE_BREAK_CONFIG_FILE: join(tmpdir(), `smoke-break-missing-${randomUUID()}.env`),
+    },
     stdio: ["pipe", "pipe", "pipe"],
   });
   const client = createClient(child);

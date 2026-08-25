@@ -5,6 +5,7 @@
       "args": [
         "src/server.mjs"
       ],
+      "cwd": ".",
       "env": {
         "SMOKE_BREAK_INTERVAL_MS": "300000"
       }

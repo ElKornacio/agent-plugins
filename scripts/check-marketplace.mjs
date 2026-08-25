@@ -39,7 +39,16 @@ for (const entry of marketplace.plugins) {
   assert.equal(manifest.name, entry.name, `${entry.name}: manifest name mismatch`);
 
   if (manifest.mcpServers) {
-    await readJson(resolve(pluginRoot, manifest.mcpServers));
+    const mcp = await readJson(resolve(pluginRoot, manifest.mcpServers));
+    for (const [serverName, server] of Object.entries(mcp.mcpServers ?? {})) {
+      if (typeof server.command === "string") {
+        assert.equal(
+          server.cwd,
+          ".",
+          `${entry.name}: bundled stdio MCP server ${serverName} must run from the plugin root`,
+        );
+      }
+    }
   }
   await readJson(resolve(pluginRoot, "hooks/hooks.json"));
   await access(resolve(pluginRoot, "README.md"));
