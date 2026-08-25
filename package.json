@@ -1,0 +1,14 @@
+{
+  "name": "@elkornacio/agent-plugins",
+  "version": "0.1.0",
+  "private": true,
+  "description": "ElKornacio's curated Codex plugin marketplace.",
+  "license": "MIT",
+  "workspaces": [
+    "plugins/*"
+  ],
+  "scripts": {
+    "test": "npm run test --workspaces --if-present",
+    "check": "node scripts/check-marketplace.mjs && npm run check --workspaces --if-present"
+  }
+}

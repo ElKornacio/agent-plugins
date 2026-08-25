@@ -1,0 +1,15 @@
+{
+  "name": "smoke-break",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A dependency-free MCP hook server that nudges Codex during long-running turns.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test",
+    "check": "node --check src/server.mjs && node --check src/turn-tracker.mjs && node --test"
+  }
+}

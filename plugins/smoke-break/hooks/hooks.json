@@ -1,0 +1,40 @@
+{
+  "description": "Track Codex turn duration and add a reflection prompt every five minutes.",
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "mcp_tool",
+            "server": "smoke-break",
+            "tool": "on_event",
+            "input": {
+              "event": "turn_start",
+              "sessionId": "${session_id}",
+              "turnId": "${turn_id}"
+            },
+            "timeout": 1
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "mcp_tool",
+            "server": "smoke-break",
+            "tool": "on_event",
+            "input": {
+              "event": "tool_end",
+              "sessionId": "${session_id}",
+              "turnId": "${turn_id}"
+            },
+            "timeout": 1
+          }
+        ]
+      }
+    ]
+  }
+}

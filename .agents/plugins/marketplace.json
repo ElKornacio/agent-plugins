@@ -1,0 +1,20 @@
+{
+  "name": "agent-plugins",
+  "interface": {
+    "displayName": "ElKornacio Agent Plugins"
+  },
+  "plugins": [
+    {
+      "name": "smoke-break",
+      "source": {
+        "source": "local",
+        "path": "./plugins/smoke-break"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

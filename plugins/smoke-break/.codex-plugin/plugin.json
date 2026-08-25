@@ -1,0 +1,36 @@
+{
+  "name": "smoke-break",
+  "version": "0.1.0",
+  "description": "Adds lightweight reflection prompts to long-running Codex turns.",
+  "author": {
+    "name": "Daniel S",
+    "url": "https://github.com/ElKornacio"
+  },
+  "homepage": "https://github.com/ElKornacio/agent-plugins/tree/main/plugins/smoke-break",
+  "repository": "https://github.com/ElKornacio/agent-plugins",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "hooks",
+    "mcp",
+    "reflection",
+    "productivity"
+  ],
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Smoke Break",
+    "shortDescription": "Reflection prompts for long Codex turns",
+    "longDescription": "Tracks each Codex turn in memory and periodically nudges the agent after tool calls to reassess progress, blockers, and direction.",
+    "developerName": "Daniel S",
+    "category": "Productivity",
+    "capabilities": [
+      "Reflection",
+      "Lifecycle hooks"
+    ],
+    "defaultPrompt": [
+      "Explain how Smoke Break monitors long Codex turns.",
+      "Show me how to configure the reflection interval."
+    ],
+    "brandColor": "#6B7280"
+  }
+}

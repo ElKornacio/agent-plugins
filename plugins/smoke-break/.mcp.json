@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "smoke-break": {
+      "command": "node",
+      "args": [
+        "src/server.mjs"
+      ],
+      "env": {
+        "SMOKE_BREAK_INTERVAL_MS": "300000"
+      }
+    }
+  }
+}
